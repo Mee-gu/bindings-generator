@@ -1492,7 +1492,7 @@ class Generator(object):
         # self.doc_file = open(docfilepath, "w+")
 
         if sys.platform == 'win32':
-            self.impl_file.write("#pragma warning(push)\n#pragma warning(disable:4244)\n")
+            self.impl_file.write("#pragma warning(push)\n#pragma warning(disable:4244 4083 4700)\n")
         else:
             self.impl_file.write("#pragma clang diagnostic push\n" +\
                                  "#pragma clang diagnostic ignored \"-Wconversion\"\n" +\
