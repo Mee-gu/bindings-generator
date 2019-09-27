@@ -1491,6 +1491,16 @@ class Generator(object):
         self.head_file = open(headfilepath, "w+")
         # self.doc_file = open(docfilepath, "w+")
 
+        if sys.platform == 'win32':
+            self.impl_file.write("#pragma warning(push)\n#pragma warning(disable:4244)\n")
+        else:
+            self.impl_file.write("#pragma clang diagnostic push\n" +\
+                                 "#pragma clang diagnostic ignored \"-Wconversion\"\n" +\
+                                 "#pragma clang diagnostic ignored \"-Wunused-function\"\n" +\
+                                 "#pragma clang diagnostic ignored \"-Wunused\"\n" +\
+                                 "#pragma clang diagnostic ignored \"-Wdeprecated\"\n" +\
+                                 "#pragma clang diagnostic ignored \"-Wuninitialized\"\n")
+   
         layout_h = Template(file=os.path.join(self.target, "templates", "layout_head.h"),
                             searchList=[self])
         layout_c = Template(file=os.path.join(self.target, "templates", "layout_head.c"),
@@ -1513,7 +1523,10 @@ class Generator(object):
         #     apidoc_ns_foot_script = Template(file=os.path.join(self.target, "templates", "apidoc_ns_foot.script"),
         #                         searchList=[self])
         #     self.doc_file.write(str(apidoc_ns_foot_script))
-
+        if sys.platform == 'win32':
+            self.impl_file.write("#pragma warning(pop)")
+        else:
+            self.impl_file.write("#pragma clang diagnostic pop")
         self.impl_file.close()
         self.head_file.close()
         # self.doc_file.close()
